@@ -638,6 +638,7 @@ function showSimonSequence(io: Server, gameCode: string, gameState: SimonGameSta
   });
   
   console.log(`🎨 Showing sequence for round ${round}: [${sequence.join(', ')}]`);
+  console.log(`📡 Emitted simon:show_sequence to room ${gameCode}`);
   
   // Calculate total animation time
   // Each color shows for SHOW_COLOR_DURATION_MS + GAP

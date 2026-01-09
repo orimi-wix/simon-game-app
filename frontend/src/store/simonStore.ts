@@ -120,10 +120,16 @@ export const useSimonStore = create<SimonStore>((set, get) => ({
     }
     
     console.log('✅ Socket connected, setting up Simon listeners');
+    console.log('🔍 Socket ID:', socket.id);
+    
+    // DEBUG: Listen for ALL events
+    socket.onAny((eventName, ...args) => {
+      console.log(`📨 Received event: ${eventName}`, args);
+    });
     
     // Listen for sequence display
     socket.on('simon:show_sequence', (data: { round: number; sequence: Color[] }) => {
-      console.log('🎨 Received show_sequence:', data);
+      console.log('🎨🎨🎨 Received show_sequence:', data);
       
       set({
         currentRound: data.round,
