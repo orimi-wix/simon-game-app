@@ -227,7 +227,11 @@ export const CircularSimonBoard: React.FC<CircularSimonBoardProps> = ({
     }
 
     // CRITICAL: Ensure ref is up-to-date before starting animation
-    sequenceRef.current = sequence;
+    // Use the sequence prop directly, not the ref, to ensure we have the latest
+    const sequenceToShow = sequence;
+    sequenceRef.current = sequenceToShow;
+    
+    console.log(`🎨 Starting sequence animation: Round ${round}, Length: ${sequenceToShow.length}, Sequence:`, sequenceToShow);
 
     const SHOW_DURATION = 800;  // How long each color stays lit (matches sound)
     const SHOW_GAP = 400;       // Gap between colors (all dark)
@@ -241,13 +245,17 @@ export const CircularSimonBoard: React.FC<CircularSimonBoardProps> = ({
       // This prevents closure issues when sequence updates between rounds
       const currentSequence = sequenceRef.current;
       
+      console.log(`🎨 showNextColor: index=${currentIndex}, sequenceLength=${currentSequence.length}, cancelled=${isCancelled}`);
+      
       if (isCancelled || currentIndex >= currentSequence.length) {
+        console.log(`🎨 Animation complete or cancelled. Index: ${currentIndex}, Length: ${currentSequence.length}`);
         setActiveColor(null);
         setSequenceIndex(-1);
         return;
       }
 
       const color = currentSequence[currentIndex];
+      console.log(`🎨 Showing color ${currentIndex + 1}/${currentSequence.length}: ${color}`);
       setActiveColor(color);
       setSequenceIndex(currentIndex);
 
@@ -260,16 +268,22 @@ export const CircularSimonBoard: React.FC<CircularSimonBoardProps> = ({
       }
 
       setTimeout(() => {
-        if (isCancelled) return; // Don't continue if effect was cancelled
+        if (isCancelled) {
+          console.log(`🎨 Cancelled during timeout for index ${currentIndex}`);
+          return; // Don't continue if effect was cancelled
+        }
         
         setActiveColor(null);
         currentIndex++;
         
         // Check again using ref to get latest sequence
         const latestSequence = sequenceRef.current;
+        console.log(`🎨 After timeout: index=${currentIndex}, latestLength=${latestSequence.length}, cancelled=${isCancelled}`);
+        
         if (!isCancelled && currentIndex < latestSequence.length) {
           timeoutId = setTimeout(showNextColor, SHOW_GAP);
         } else {
+          console.log(`🎨 Animation finished. Final index: ${currentIndex}, Length: ${latestSequence.length}`);
           setActiveColor(null);
           setSequenceIndex(-1);
         }
@@ -280,12 +294,13 @@ export const CircularSimonBoard: React.FC<CircularSimonBoardProps> = ({
     timeoutId = setTimeout(showNextColor, 500);
 
     return () => {
+      console.log(`🎨 Cleaning up animation effect. Round: ${round}, Sequence length: ${sequence.length}`);
       isCancelled = true; // Mark as cancelled to prevent stale callbacks
       if (timeoutId) clearTimeout(timeoutId);
       setActiveColor(null);
       setSequenceIndex(-1);
     };
-  }, [isShowingSequence, sequence]);
+  }, [isShowingSequence, sequence, round]); // Added round to dependencies to force reset on new round
 
   // Handle color button click
   const handleColorClick = (color: Color) => {
