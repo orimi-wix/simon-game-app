@@ -50,12 +50,9 @@ export function WaitingRoomPage() {
     // Initialize Simon listeners
     initializeListeners();
     
-    // Connect socket
-    const socket = socketService.getSocket();
-    if (!socket) {
-      console.error('❌ No socket connection');
-      return;
-    }
+    // Connect socket (CRITICAL FIX: Must call connect() first!)
+    const socket = socketService.connect();
+    console.log('✅ Socket connected:', socket.connected);
     
     // Join room via socket
     if (gameCode && playerId) {
