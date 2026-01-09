@@ -41,11 +41,11 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         background: 'linear-gradient(135deg, #22c55e 0%, #3b82f6 25%, #ef4444 50%, #eab308 75%, #22c55e 100%)',
       }}
     >
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center justify-center w-full h-full p-4">
         <img
           src="/splash.png"
           alt="Simon's Sequence"
-          className="w-80 h-80 md:w-96 md:h-96 object-contain animate-pulse"
+          className="max-w-[90vw] max-h-[90vh] w-auto h-auto object-contain animate-pulse"
         />
       </div>
     </div>
