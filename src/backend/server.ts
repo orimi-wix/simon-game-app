@@ -2,6 +2,7 @@
  * Server Entry Point
  * 
  * Initializes Express + Socket.io server.
+ * Deployed on Render.com
  */
 
 import { createServer } from 'http';
