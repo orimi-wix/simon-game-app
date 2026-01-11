@@ -1,0 +1,74 @@
+# Simon Game - Render Deployment Configuration
+# ============================================
+# This file documents the production deployment on Render.com
+# Last updated: 2026-01-11
+
+## Production URLs
+# ----------------
+# Frontend (Game):  https://simon-game-frontend-rbvx.onrender.com
+# Backend (API):    https://simon-game-backend-8pyb.onrender.com
+# Health Check:     https://simon-game-backend-8pyb.onrender.com/health
+
+## Render Services
+# ----------------
+
+### Backend Service: simon-game-backend
+# Type:           Web Service
+# Service ID:     srv-d5hp10l6ubrc7385gb5g
+# Dashboard:      https://dashboard.render.com/web/srv-d5hp10l6ubrc7385gb5g
+# URL:            https://simon-game-backend-8pyb.onrender.com
+# Runtime:        Node.js (20.x via .node-version)
+# Region:         Oregon (us-west)
+# Plan:           Starter
+# Branch:         main
+# Auto Deploy:    Yes (on commit)
+# Build Command:  npm install && npm run build
+# Start Command:  npm start
+# Health Check:   /health
+
+### Backend Environment Variables:
+# NODE_ENV=production
+# PORT=10000
+# JWT_SECRET=<generated-secret>
+# FRONTEND_URL=https://simon-game-frontend-rbvx.onrender.com
+
+### Frontend Service: simon-game-frontend
+# Type:           Static Site
+# Service ID:     srv-d5houiq4d50c7397lrf0
+# Dashboard:      https://dashboard.render.com/static/srv-d5houiq4d50c7397lrf0
+# URL:            https://simon-game-frontend-rbvx.onrender.com
+# Plan:           Starter
+# Branch:         main
+# Auto Deploy:    Yes (on commit)
+# Build Command:  cd frontend && npm install && npm run build
+# Publish Path:   frontend/dist
+
+### Frontend Environment Variables:
+# VITE_API_URL=https://simon-game-backend-8pyb.onrender.com
+# VITE_SOCKET_URL=https://simon-game-backend-8pyb.onrender.com
+
+## GitHub Repository
+# ------------------
+# Repository:     https://github.com/orimi-wix/simon-game-app
+# Branch:         main
+
+## Deployment Notes
+# -----------------
+# - Uses Node.js 20.x LTS (specified in .node-version file)
+# - Backend runs on port 10000 (Render default)
+# - WebSocket connections use the same backend URL
+# - CORS is configured to allow the frontend URL
+# - JWT tokens are used for session management (HTTP-only cookies)
+
+## Troubleshooting
+# ----------------
+# - Check build logs: Dashboard > Deploys > Select deploy > View logs
+# - Check runtime logs: Dashboard > Logs
+# - Health check endpoint: GET /health
+# - If builds fail with npm errors, try triggering a manual deploy
+
+## Manual Deploy Trigger
+# ----------------------
+# To trigger a manual deploy, update any environment variable or use:
+# Render Dashboard > Manual Deploy > Deploy latest commit
+
